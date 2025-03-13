@@ -93,7 +93,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: 366c4936f249a4a92b826f4f74cf4018, type: 2}
+  m_LightingDataAsset: {fileID: 112000000, guid: 54cedc9511e6a4da39bfe8831e856c86, type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 406068d360f084f24998b44f67654f31, type: 2}
 --- !u!196 &4
 NavMeshSettings:
@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 690593022}
   - component: {fileID: 690593021}
   m_Layer: 0
-  m_Name: TriangleNET_Test
+  m_Name: Triangulation_Test
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
