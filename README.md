@@ -1,16 +1,16 @@
-# Unity - PolyExtruder
+# BurstPolyExtruder
 
-The purpose of this project is to provide the functionality to create custom meshes (polygons) in Unity based on a collection (array) of vertices directly at runtime. These 2D meshes are created along the x- and z-dimensions in the 3D space. Furthermore, the created custom mesh can be *extruded* (into a 3D prism) along the y-dimension in the 3D space.
+The original project *by* Nico Reski aims to provide the functionality to create custom meshes (polygons) in Unity based on a collection (array) of vertices directly at runtime. These 2D meshes are created along the x- and z-dimensions in the 3D space. Furthermore, the created custom mesh can be *extruded* (into a 3D prism) along the y-dimension in the 3D space. This project optimizes the performance by replacing Triangle.NET with BurstTriangulator.
 
 #### Background
 
-Some of my research work required me to visualize country borders (geospatial coordinates; received from various open data sources) as individual meshes (2D polygons / 3D prisms) in the 3D space in Unity. Some examples of the usage of this project are provided beneath in the section **Screenshots - SCB Kommun RT90**, demonstrating the visualization of all individual municipalities in the country of Sweden.
+Some of my research work required me to visualize floods as individual meshes - 2D polygons or 3D prisms - within a VR environment using Unity. Initially, I utilized Unity - PolyExtruder for this purpose. However, performance issues arose due to the use of Triangle.NET for triangulation. To address this, I replaced Triangle.NET with BurstTriangulator, which resulted in significant performance improvements.
 
 ## Features
 
 ### Triangulation.cs
 
-The `Triangulation.cs` class features a partial implementation of the original [Triangle](http://www.cs.cmu.edu/~quake/triangle.html) and [Triangle.NET](https://archive.codeplex.com/?p=triangle) libraries in order to create render triangles for a custom mesh. The implemented triangulation supports holes in the mesh.
+The `Triangulation.cs` class features a partial implementation of the original [BurstTriangulator](https://github.com/andywiecko/BurstTriangulator) to create render triangles for a custom mesh. The implemented triangulation supports holes in the mesh.
 
 ### PolyExtruder.cs
 
@@ -32,10 +32,15 @@ The `PolyExtruderLight.cs` class is an alternative, lightweight implementation o
 
 ## Dependencies
 
+**Required:**
+
+- [`Unity.Burst@1.8.18`][burst]
+- [`Unity.Collections@2.5.1`][collections]
+
 This project has been built using the following specifications:
 
-* Apple macOS Sonoma 14.7
-* [Unity](https://unity.com) 2022.3.20f1 Personal (Apple Silicon, LTS)
+* Apple macOS Sequoia 15.3.1
+* [Unity](https://unity.com) 6000.0.28f1 Personal (Apple Silicon, LTS).
 
 *Note:* Generally, Unity source code should work also within their Windows counterparts. Please check out the above stated dependencies for troubleshooting.
 
@@ -49,12 +54,14 @@ Additional resources used to create this project have been accessed as follows:
 * Determine order (clockwise vs. counter-clockwise) of input vertices ([StackOverflow](https://stackoverflow.com/a/1165943))
 * Polygons and meshes *by* Paul Bourke ([project web page](http://paulbourke.net/geometry/polygonmesh/))
 * Geo-spatial data about the island of Gotland (Sweden) ([Swedish Statistiska centralbyrån (SCB); accessed 2019-02-06](https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/digitala-granser/))
+* Unity - PolyExtruder *by* Nico Reski ([project web page](https://github.com/nicoversity/unity_polyextruder))
+* BurstTriangulator *by* Andrzej Więckowski ([project web page](https://github.com/andywiecko/BurstTriangulator))
 
 ## How to use
 
 #### Import assets to Unity project
 
-In order to add the features provided by this project to your Unity project, I recommend to add the assets by simply importing the pre-compiled `nicoversity-unity_polyextruder.unitypackage`. Alternatively, the repository directory `unity_src` features a directory titled `Assets/nicoversity/polyextrude`, which contains all files that should be manually added to the respective `Assets` directory of an existing Unity project.
+To add the features above to your Unity project, I recommend adding the assets by importing the pre-compiled `BurstPolyExtruder.unitypackage`. Alternatively, the repository directory `src` features a directory titled `Assets/BurstPolyExtruder`, which contains all files that should be in the respective `Assets` directory of an existing Unity project. However, ensure Burst is installed and `unsafe` code is allowed (even when you import the pre-compiled package or add the source code manually). In some rare cases, you should check whether Collections (com.unity.collections) is installed.
 
 #### PolyExtruder.cs class
 
@@ -102,7 +109,7 @@ All Unity scripts in this project are well documented directly within the source
 
 The imported Unity assets provide three demonstration scenes:
 
-- `TriangleNET_Test.unity`, illustrating and testing the implementation of the `Triangulation.cs` class via `TriangulationTest.cs` script.
+- `Triangulation_Test.unity`, illustrating and testing the implementation of the `Triangulation.cs` class via `TriangulationTest.cs` script.
 - `PolyExtruder_Demo.unity`, illustrating the usage of the `PolyExtruder.cs` class via `PolyExtruderDemo.cs` script. The `PolyExtruderDemo.cs` script allows the user to make selections using the Unity Inspector accordingly to a) select an example data set for the custom mesh creation (Triangle, Square, Cross, SCB Kommun RT90 Gotland), b) indicate whether the custom mesh should be created in 2D (polygon) or 3D (prism), c) the length ("height") of the extrusion, and d) whether the extrusion length should be dynamically scaled at runtime (oscillated movement example). 
 - `PolyExtruderLight_Demo.unity`, illustrating the usage of the `PolyExtruderLight.cs` class via `PolyExtruderLightDemo.cs` script, following the same examples as featured in the `PolyExtruderDemo.cs` script.
 
@@ -164,34 +171,12 @@ A random extrusion length ("height") for each municipality has been applied to e
 
 ## Changelog
 
-### 2024-11-25
+### 2025-03-15
 
-* Added an alternative, more lighweight implementation of the `PolyExtruder` class, titled `PolyExtruderLight`. `PolyExtruderLight` generates one combined mesh (3D prism only) instead of keeping three separate top, bottom, and surround meshes.
-
-### 2023-01-16
-
-* Minor bug fix: The `updateColor()` function in the `PolyExtruder.cs` class considers now appropriately the coloring of the bottom mesh component depending on whether or not it exists in the 3D prism condition.
-
-### 2023-01-15
-
-* Minor bug fix: Appropriate type casting (`double`) of `Vector2` values in `calculateAreaAndCentroid()` function.
-* Modified the default material to utilize Unity's `Standard` shader instead of the legacy `Diffuse` shader.
-
-### 2023-01-13
-
-* Modified `calculateAreaAndCentroid()` function to internally utilize `double` (instead of `float`) type for area and centroid calculations.
-* Added feature to conveniently indicate whether or not the bottom mesh component should be attached (only in Prism 3D, i.e., `is3D = true`).
-* Added feature to conveniently indicate whether or not `MeshCollider` components should be attached.
-
-### 2023-01-06
-
-* Modified the mesh creation algorithm to use for each vertex the difference between original input vertex and calculated polygon centroid (instead of simply using the original input vertices). This way, the anchor of the generated mesh is correctly located at the coordinate system's origin (0,0), in turn enabling appropriate mesh manipulation at runtime (e.g., via `Scale` property in the `GameObject's Transform`).
-* Unity version upgrade to support 2021.3.16f1 (from prior version 2019.2.17f1; no changes in code required).
-
-### 2021-02-17
-
-* Added feature to allow display of the polygon's outline.
-* Upgrade to support Unity version 2019.2.17f1 Personal (from prior version 2019.1.5f1; no changes in the code required).
+* First release of BurstPolyExtruder, based on Unity - PolyExtruder (2024-11-25) and BurstTriangulator (v3.6.0).
 
 ## License
 MIT License, see [LICENSE.md](LICENSE.md)
+
+[burst]: https://docs.unity3d.com/Packages/com.unity.burst@1.8/
+[collections]: https://docs.unity3d.com/Packages/com.unity.collections@2.5
