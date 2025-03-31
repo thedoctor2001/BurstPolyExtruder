@@ -175,6 +175,10 @@ A random extrusion length ("height") for each municipality has been applied to e
 
 * First release of BurstPolyExtruder, based on Unity - PolyExtruder (2024-11-25) and BurstTriangulator (v3.6.0).
 
+### 2025-03-31
+
+* Second release of BurstPolyExtruder, based on Unity - PolyExtruder (2024-11-25) and BurstTriangulator (v3.7.0).
+
 ## License
 MIT License, see [LICENSE.md](LICENSE.md)
 
